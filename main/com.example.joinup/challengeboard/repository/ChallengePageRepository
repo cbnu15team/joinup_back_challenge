@@ -1,0 +1,20 @@
+package com.example.joinup.challengeboard.repository;
+
+import com.example.joinup.challengeboard.dto.ChallengePageDTO;
+import com.example.joinup.challengeboard.entity.ChallengeBoard;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface ChallengePageRepository extends JpaRepository<ChallengeBoard, Integer> {
+
+    // DTO를 반환하는 JPQL 쿼리 작성
+    @Query("SELECT new com.example.joinup.challengeboard.dto.ChallengePageDTO( " +
+            "cd.title, u.realName, cd.viewCount, cd.createdAt) " +
+            "FROM ChallengeBoard cd " +
+            "JOIN cd.user u")
+    List<ChallengePageDTO> findAllCompetitionPages();
+}
