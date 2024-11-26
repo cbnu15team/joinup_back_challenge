@@ -1,0 +1,60 @@
+package com.example.joinup.challengeboard.entity;
+
+import com.example.joinup.user.entity.User;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "challenge_board")
+public class ChallengeBoard {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer boardId; // 게시글 ID
+
+    @Column(name = "title", nullable = false, length = 255)
+    private String title; // 게시글 제목
+
+    @Column(name = "content", nullable = false)
+    private String content; // 게시글 내용
+
+    @Column(name = "view_count", nullable = false)
+    private Integer viewCount = 0; // 방문자 수 초기값
+
+    @Column(name = "created_at", nullable = false)
+    private String createdAt; // 생성 시간
+
+    // User와의 연관 관계 설정 (ManyToOne)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false) // ChallengeBoard 테이블에 있는 user_id 외래키
+    private User user; // 작성자
+
+    /**
+     * 작성자의 ID를 설정하는 메서드
+     * @param userId 작성자의 ID
+     */
+    public void setUserId(Integer userId) {
+        if (this.user == null) {
+            this.user = new User(); // 새로운 User 객체를 생성
+        }
+        this.user.setUserId(userId); // User 객체의 ID 설정
+    }
+
+    /**
+     * 작성자의 ID를 반환하는 메서드
+     * @return 작성자의 ID
+     */
+    public Integer getUserId() {
+        return this.user != null ? this.user.getUserId() : null; // User 객체에서 ID 반환
+    }
+
+    /**
+     * 방문자 수 증가 메서드
+     */
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
+}
