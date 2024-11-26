@@ -1,0 +1,71 @@
+package com.example.joinup.challengeboard.controller;
+
+import com.example.joinup.challengeboard.entity.ChallengeBoard;
+import com.example.joinup.challengeboard.service.ChallengeBoardService;
+import com.example.joinup.user.entity.User;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/challenge-board")
+public class ChallengeBoardController {
+
+    private final ChallengeBoardService challengeBoardService;
+
+    public ChallengeBoardController(ChallengeBoardService service) {
+        this.challengeBoardService = service;
+    }
+
+    // 상세글 생성
+    @PostMapping
+    public ResponseEntity<ChallengeBoard> createChallengeBoard(
+            @RequestBody ChallengeBoard board,
+            @AuthenticationPrincipal User currentUser) {
+        ChallengeBoard createdBoard = challengeBoardService.createChallengeBoard(board, currentUser);
+        return ResponseEntity.ok(createdBoard);
+    }
+
+    // 상세글 ID로 조회
+    @GetMapping("/{boardId}")
+    public ResponseEntity<ChallengeBoard> getChallengeBoardById(@PathVariable Integer boardId) {
+        ChallengeBoard board = challengeBoardService.getChallengeBoardById(boardId);
+        return ResponseEntity.ok(board);
+    }
+
+    // 모든 상세글 조회
+    @GetMapping
+    public ResponseEntity<List<ChallengeBoard>> getAllChallengeBoards() {
+        List<ChallengeBoard> boards = challengeBoardService.getAllChallengeBoards();
+        return ResponseEntity.ok(boards);
+    }
+
+    // 상세글 수정
+    @PutMapping("/{boardId}")
+    public ResponseEntity<ChallengeBoard> updateChallengeBoard(
+            @PathVariable Integer boardId,
+            @RequestBody ChallengeBoard updatedBoard,
+            @AuthenticationPrincipal User currentUser) {
+        ChallengeBoard updated = challengeBoardService.updateChallengeBoard(boardId, updatedBoard, currentUser);
+        return ResponseEntity.ok(updated);
+    }
+
+    // 상세글 삭제
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<String> deleteChallengeBoard(
+            @PathVariable Integer boardId,
+            @AuthenticationPrincipal User currentUser) {
+        challengeBoardService.deleteChallengeBoard(boardId, currentUser);
+        return ResponseEntity.ok("상세글이 삭제되었습니다.");
+    }
+
+    // 방문자 수 증가
+    @PostMapping("/{boardId}/increment-view")
+    public ResponseEntity<String> incrementViewCount(@PathVariable Integer boardId) {
+        challengeBoardService.incrementVisitorCount(boardId);
+        return ResponseEntity.ok("방문자 수가 증가되었습니다.");
+    }
+}
