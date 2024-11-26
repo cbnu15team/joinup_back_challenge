@@ -1,0 +1,22 @@
+package com.example.joinup.challengeboard.service;
+
+import com.example.joinup.challengeboard.dto.ChallengePageDTO;
+import com.example.joinup.challengeboard.repository.ChallengePageRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class ChallengePageService {
+
+    private final ChallengePageRepository challengePageRepository;
+
+    public ChallengePageService(ChallengePageRepository challengePageRepository) {
+        this.challengePageRepository = challengePageRepository;
+    }
+
+    // 게시글 목록 조회
+    public List<ChallengePageDTO> getAllChallengePages() {
+        return challengePageRepository.findAllChallengePages();
+    }
+}
